@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# file: mpi.pbs
+#PBS -N example-mpi-job
+### set output files
+#PBS -o example.stdout
+#PBS -e example.stderr
+### set queue name
+#PBS -q default
+### set number of nodes
+###PBS -l nodes=2:ppn=4
+#PBS -l nodes=2:ppn=4+1:ppn=1
+### get the number of processors
+NP=`cat $PBS_NODEFILE | wc -l`
+# enter job's working directory
+cd $PBS_O_WORKDIR
+echo This job is $PBS_JOBID@$PBS_QUEUE in $PBS_O_WORKDIR
+echo $PBS_NODEFILE > machine4mpirun.$PBS_JOBID
+cat $PBS_NODEFILE >> machine4mpirun.$PBS_JOBID
+# run an example mpi job
+# set env
+module load mpi/openmpi-1.6.5
+# exec
+mpirun -np $NP -machinefile $PBS_NODEFILE ./mpi_openmpi

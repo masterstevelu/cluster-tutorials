@@ -1,0 +1,12 @@
+#!/bin/bash
+
+### set job name
+#PBS -N hello
+### set job queue
+#PBS -q daopian
+
+### print job id and job queue
+echo "This jobs is "$PBS_JOBID@$PBS_QUEUE
+echo begin time is `date`
+sh hello.sh
+echo end time is `date`
