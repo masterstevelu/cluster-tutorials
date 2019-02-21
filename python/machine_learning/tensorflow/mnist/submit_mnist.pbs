@@ -1,0 +1,10 @@
+#PBS -N mnist_tf
+### use one node for this job
+#PBS -l nodes=1:ppn=20
+#PBS -q default
+cd $PBS_O_WORKDIR
+
+echo begin time is `date`
+/usr/local/bin/singularity exec /mnt/data/container_library/deep_learning/tf-1.10.0-py35 python convolutional.py
+echo end time is `date`
+

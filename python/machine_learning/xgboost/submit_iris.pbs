@@ -2,8 +2,6 @@
 ### use one node for this job
 #PBS -l nodes=1
 #PBS -q default
-#PBS -o iris.stdout
-#PBS -e iris.stderr
 
 cd $PBS_O_WORKDIR
 module load anaconda/5.3.0

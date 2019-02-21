@@ -1,7 +1,6 @@
 from sklearn.datasets import load_iris
 import xgboost as xgb
 from xgboost import plot_importance
-from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
 # read in the iris data
