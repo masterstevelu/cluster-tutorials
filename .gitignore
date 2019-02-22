@@ -1,3 +1,4 @@
 *.pyc
 *.e*
 *.o*
+jupyter/log/*

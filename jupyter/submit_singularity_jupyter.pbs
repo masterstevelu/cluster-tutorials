@@ -1,0 +1,36 @@
+#!/bin/bash
+
+### set job name
+#PBS -N singularity_jupyter
+### set job queue
+#PBS -q default
+#PBS -l nodes=1
+#PBS -e log
+#PBS -o log
+
+cd $PBS_O_WORKDIR
+
+user=$(whoami)
+port=$PORT
+node=$(hostname -s)
+
+listen_port=`netstat -an | grep LISTEN | grep $port`
+if [[ ! $listen_port == *"LISTEN"* ]]; then
+    echo "
+SSH Tunnel INFO:
+
+Mac/Linux:
+ssh -N -L ${port}:${node}:${port} ${user}@183.174.229.251
+
+Windows:
+Remote server: ${node}
+Remote port: ${port}
+SSH server: 183.174.229.251
+SSH login: $user
+SSH port: 22
+" > log/tunnel.$PBS_JOBID
+
+/usr/local/bin/singularity exec --home ${HOME} --bind ${HOME}/.local:/home/username/.local $IMAGE jupyter notebook --no-browser --port=$PORT --ip=0.0.0.0
+else
+    echo "port already in use! try another port!" > log/port_in_use
+fi
