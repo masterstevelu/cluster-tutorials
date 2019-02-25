@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#PBS -N julia_example
+### use one node for this job
+#PBS -l nodes=1
+#PBS -q default
+
+cd $PBS_O_WORKDIR
+module load anaconda/5.3.0
+source activate julia
+
+julia hello.jl 

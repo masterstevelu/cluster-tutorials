@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#PBS -N R_job
+### use one node for this job
+#PBS -l nodes=1
+#PBS -q default
+
+cd $PBS_O_WORKDIR
+module load anaconda/5.3.0
+
+Rscript ols.R

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#PBS -N julia_example
+### use one node for this job
+#PBS -l nodes=2:ppn=4
+#PBS -q default
+
+cd $PBS_O_WORKDIR
+module load anaconda/5.3.0
+source activate julia
+
+julia --machine-file $PBS_NODEFILE ./julia_parallel_test.jl

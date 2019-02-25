@@ -39,7 +39,6 @@ sub_arr=(${sub//./ })
 jobid=${sub_arr[0]}
 sleep 6 
 
-echo "log/tunnel.$jobid.rmdx-cluster.edu.com.cn" 
 if [ -f log/tunnel.$jobid.rmdx-cluster.edu.com.cn ]; then
     cat log/tunnel.$jobid.rmdx-cluster.edu.com.cn
 fi
