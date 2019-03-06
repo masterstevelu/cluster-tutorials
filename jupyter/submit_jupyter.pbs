@@ -4,7 +4,7 @@
 #PBS -N anaconda_jupyter
 ### set job queue
 #PBS -q default
-#PBS -l nodes=1
+#PBS -l nodes=1:ppn=10
 #PBS -e log
 #PBS -o log
 

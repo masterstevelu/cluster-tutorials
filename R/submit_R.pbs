@@ -2,7 +2,7 @@
 
 #PBS -N R_job
 ### use one node for this job
-#PBS -l nodes=1
+#PBS -l nodes=1:ppn=4
 #PBS -q default
 
 cd $PBS_O_WORKDIR
