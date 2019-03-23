@@ -7,4 +7,4 @@
 
 cd $PBS_O_WORKDIR
 module load matlab/2016b
-matlab -nodisplay -nosplash -r matlab_simple.m
+matlab -nodisplay -nosplash < matlab_simple.m
