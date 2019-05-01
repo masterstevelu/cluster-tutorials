@@ -2,6 +2,8 @@ import time
 import random
 from timeit import timeit
 import timeit, functools
+import numpy as np
+import numba
 
 # 计算500期的移动均线，并将结果保存到一个列表里返回
 def ma_basic(data, ma_length):
@@ -30,18 +32,65 @@ def ma_basic(data, ma_length):
     # 返回数据
     return ma
 
-# 运行测试
-#start = time.time()
+def ma_numpy_right(data, ma_length):
+    ma = []
 
-# for i in range(test_times):
-#     result = ma_basic(data, ma_length)
-#
-# time_per_test = (time.time()-start)/test_times
-# time_per_point = time_per_test/(data_length - ma_length)
-#
-# print u'单次耗时：%s秒' %time_per_test
-# print u'单个数据点耗时：%s微秒' %(time_per_point*1000000)
-# print u'最后10个移动平均值：', result[-10:]
+    # 用numpy数组来缓存计算窗口内的数据
+    data_window = np.array(data[:ma_length])
+
+    test_data = data[ma_length:]
+
+    for new_tick in test_data:
+        # 使用numpy数组的底层数据偏移来实现数据更新
+        data_window[0:ma_length-1] = data_window[1:ma_length]
+        data_window[-1] = new_tick
+        ma.append(data_window.mean())
+
+    return ma
+
+@numba.jit
+def ma_numba(data, ma_length):
+    ma = []
+    data_window = data[:ma_length]
+    test_data = data[ma_length:]
+
+    for new_tick in test_data:
+        data_window.pop(0)
+        data_window.append(new_tick)
+        sum_tick = 0
+        for tick in data_window:
+            sum_tick += tick
+        ma.append(sum_tick/ma_length)
+
+    return ma
+
+def ma_cache(data, ma_length):
+    ma = []
+    data_window = data[:ma_length]
+    test_data = data[ma_length:]
+
+    # 缓存的窗口内数据求和结果
+    sum_buffer = 0
+
+    for new_tick in test_data:
+        old_tick = data_window.pop(0)
+        data_window.append(new_tick)
+
+        # 如果缓存结果为空，则先通过遍历求第一次结果
+        if not sum_buffer:
+            sum_tick = 0
+            for tick in data_window:
+                sum_tick += tick
+            ma.append(sum_tick/ma_length)
+
+            # 将求和结果缓存下来
+            sum_buffer = sum_tick
+        else:
+            # 这里的算法将计算复杂度从O(n)降低到了O(1)
+            sum_buffer = sum_buffer - old_tick + new_tick
+            ma.append(sum_buffer/ma_length)
+
+    return ma
 
 if __name__ == "__main__" :
     data = []
@@ -52,6 +101,12 @@ if __name__ == "__main__" :
     for i in range(data_length):
         data.append(random.randint(1, 100))
 
-    t = timeit.Timer(functools.partial(ma_basic, data, ma_length))
+    t_basic = timeit.Timer(functools.partial(ma_basic, data, ma_length))
+    t_numpy_right = timeit.Timer(functools.partial(ma_numpy_right, data, ma_length))
+    t_numba = timeit.Timer(functools.partial(ma_numba, data, ma_length))
+    t_cache_algorithm = timeit.Timer(functools.partial(ma_cache, data, ma_length))
 
-    print(t.timeit(test_times))
+    print("basic : " + str(t_basic.timeit(test_times)))
+    print("numpy right : " + str(t_numpy_right.timeit(test_times)))
+    print("numba : " + str(t_numba.timeit(test_times)))
+    print("cache algorithm :" + str(t_cache_algorithm.timeit(test_times)))
