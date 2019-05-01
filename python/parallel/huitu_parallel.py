@@ -13,10 +13,10 @@ def haversine(lon1, lat1, lon2, lat2): # 经度1，纬度1，经度2，纬度2 �
     # 将十进制度数转化为弧度
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
     # haversine公式
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
+    c = 2 * asin(sqrt(a))
     r = 6371 # 地球平均半径，单位为公里
     return c * r * 1000
 
@@ -75,15 +75,6 @@ def cal_metrics(year, indu):
         result = pd.DataFrame({'up_局部':up_95, 'down_局部':down_95, 'k':ks, 'up_全局':up_99, 'down_全局':down_99})
         save_file_name = './output/' + year + '_年行业_' + indu + '.xlsx'
         result.to_excel(save_file_name, index=False)
-        #fig = plt.figure(figsize=(20, 6))
-        #plt.plot(d, ks, 'r-', )
-        #plt.plot(d, result['up_局部'].values, 'b--')  #蓝色，局部95
-        #plt.plot(d, result['down_局部'].values, 'b--') #蓝色，局部5
-        #plt.plot(d, result['up_全局'].values, 'k-.')  #黑色，全局99
-        #plt.plot(d, result['down_全局'].values, 'k-.')  #黑色，全局1
-        #plt.show()
-        #fig_name =  year + '年行业' + indu + '.png'
-        #fig.savefig(fig_name, dpi=300)
 
 if __name__ == "__main__" :
 
