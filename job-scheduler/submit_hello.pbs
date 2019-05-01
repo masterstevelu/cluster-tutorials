@@ -4,9 +4,11 @@
 #PBS -N hello
 ### set job queue
 #PBS -q default
+#PBS -l nodes=node-2-16
 
 ### print job id and job queue
 echo "This jobs is "$PBS_JOBID@$PBS_QUEUE
 echo begin time is `date`
-sh hello.sh
+sleep 10
+hostname
 echo end time is `date`

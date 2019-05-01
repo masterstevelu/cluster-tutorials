@@ -3,3 +3,6 @@
 *.o*
 jupyter/log/*
 jupyter/.ipynb_checkpoints
+
+/python/parallel/output/*
+/python/parallel/*.xlsx
