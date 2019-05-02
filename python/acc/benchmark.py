@@ -5,6 +5,7 @@ import timeit, functools
 import numpy as np
 import numba
 import multiprocessing
+import sys
 
 # 计算500期的移动均线，并将结果保存到一个列表里返回
 def ma_basic(data, ma_length):
@@ -49,7 +50,6 @@ def ma_numpy_wrong(data, ma_length):
 
 def ma_numpy_right(data, ma_length):
     ma = []
-
     # 用numpy数组来缓存计算窗口内的数据
     data_window = np.array(data[:ma_length])
 
@@ -108,32 +108,38 @@ def ma_cache(data, ma_length):
     return ma
 
 if __name__ == "__main__" :
-    data = []
+
     data_length = 100000    # 总数据量
+    # 生成测试数据
+    data = []
+    for i in range(data_length):
+        data.append(random.randint(1, 100))
     ma_length = 500         # 移动均线的窗口
     test_times = 10         # 测试次数
 
-    for i in range(data_length):
-        data.append(random.randint(1, 100))
+    # for i in range(data_length):
+    #     data.append(random.randint(1, 100))
 
     t_basic = timeit.Timer(functools.partial(ma_basic, data, ma_length))
+    t_numpy_wrong = timeit.Timer(functools.partial(ma_numpy_wrong, data, ma_length))
     t_numpy_right = timeit.Timer(functools.partial(ma_numpy_right, data, ma_length))
     t_numba = timeit.Timer(functools.partial(ma_numba, data, ma_length))
     t_cache_algorithm = timeit.Timer(functools.partial(ma_cache, data, ma_length))
 
-    # print("basic : " + str(t_basic.timeit(test_times)))
-    print("numpy right : " + str(t_numpy_right.timeit(test_times)))
-    # print("numba : " + str(t_numba.timeit(test_times)))
-    # print("cache algorithm :" + str(t_cache_algorithm.timeit(test_times)))
+    print("basic :\t" + str(t_basic.timeit(test_times)))
+    # print("numpy wrong :\t" + str(t_numpy_wrong.timeit(test_times)))
+    # print("numpy right :\t" + str(t_numpy_right.timeit(test_times)))
+    # print("numba :\t" + str(t_numba.timeit(test_times)))
+    # print("cache algorithm :\t" + str(t_cache_algorithm.timeit(test_times)))
 
     start = time.time()
     cores = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=cores)
-
+    result = []
     for j in range(test_times):
-        pool.apply_async(ma_numpy_right, (data, ma_length))
+        result.append(pool.apply_async(ma_basic, (data, ma_length)))
 
     pool.close()
     pool.join()
     elapsed = time.time() - start
-    print("time : " + str(elapsed))
+    print("multiprocessing :\t" + str(elapsed))
