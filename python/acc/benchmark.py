@@ -127,10 +127,10 @@ if __name__ == "__main__" :
     t_cache_algorithm = timeit.Timer(functools.partial(ma_cache, data, ma_length))
 
     print("basic :\t" + str(t_basic.timeit(test_times)))
-    # print("numpy wrong :\t" + str(t_numpy_wrong.timeit(test_times)))
-    # print("numpy right :\t" + str(t_numpy_right.timeit(test_times)))
-    # print("numba :\t" + str(t_numba.timeit(test_times)))
-    # print("cache algorithm :\t" + str(t_cache_algorithm.timeit(test_times)))
+    print("numpy wrong :\t" + str(t_numpy_wrong.timeit(test_times)))
+    print("numpy right :\t" + str(t_numpy_right.timeit(test_times)))
+    print("numba :\t" + str(t_numba.timeit(test_times)))
+    print("cache algorithm :\t" + str(t_cache_algorithm.timeit(test_times)))
 
     start = time.time()
     cores = multiprocessing.cpu_count()
