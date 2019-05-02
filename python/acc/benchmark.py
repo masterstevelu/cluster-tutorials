@@ -25,7 +25,7 @@ def ma_basic(data, ma_length):
         data_window.pop(0)
         data_window.append(new_tick)
 
-        # 遍历求均线
+        # 遍历求均值
         sum_tick = 0
         for tick in data_window:
             sum_tick += tick
@@ -117,9 +117,6 @@ if __name__ == "__main__" :
     ma_length = 500         # 移动均值的窗口
     test_times = 10         # 测试次数
 
-    # for i in range(data_length):
-    #     data.append(random.randint(1, 100))
-
     t_basic = timeit.Timer(functools.partial(ma_basic, data, ma_length))
     t_numpy_wrong = timeit.Timer(functools.partial(ma_numpy_wrong, data, ma_length))
     t_numpy_right = timeit.Timer(functools.partial(ma_numpy_right, data, ma_length))
@@ -143,3 +140,14 @@ if __name__ == "__main__" :
     pool.join()
     elapsed = time.time() - start
     print("multiprocessing :\t" + str(elapsed))
+
+    start = time.time()
+    cores = multiprocessing.cpu_count()
+    pool = multiprocessing.Pool(processes=cores)
+    result = []
+    for j in range(test_times):
+        result.append(pool.apply_async(ma_cache, (data, ma_length)))
+
+    pool.close()
+    pool.join()
+    elapsed = time.time() - start
