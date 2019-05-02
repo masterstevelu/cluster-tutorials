@@ -139,7 +139,7 @@ if __name__ == "__main__" :
     pool.close()
     pool.join()
     elapsed = time.time() - start
-    print("multiprocessing :\t" + str(elapsed))
+    print("multiprocessing with basic algorithm :\t" + str(elapsed))
 
     start = time.time()
     cores = multiprocessing.cpu_count()
@@ -151,3 +151,4 @@ if __name__ == "__main__" :
     pool.close()
     pool.join()
     elapsed = time.time() - start
+    print("multiprocessing with cache algorithm :\t" + str(elapsed))
