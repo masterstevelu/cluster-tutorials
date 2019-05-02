@@ -114,7 +114,7 @@ if __name__ == "__main__" :
     data = []
     for i in range(data_length):
         data.append(random.randint(1, 100))
-    ma_length = 500         # 移动均线的窗口
+    ma_length = 500         # 移动均值的窗口
     test_times = 10         # 测试次数
 
     # for i in range(data_length):
